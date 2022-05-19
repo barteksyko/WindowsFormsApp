@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class AddEditStudent : Form
     {
-        public Form1()
+        public AddEditStudent()
         {
             InitializeComponent();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnConfirm_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
