@@ -19,17 +19,10 @@ namespace WindowsFormsApp1
         public Main()
         {
             InitializeComponent();
-            //var students = new List<Student>();
-            //students.Add(new Student { FirstName = "Maja"});
-            //students.Add(new Student { FirstName = "Marek"});
-            //students.Add(new Student { FirstName = "Małgosia"});
 
-            //SerializeToFile(students);
             var students = DeserializeFromFile();
-            foreach(var student in students)
-            {
-                MessageBox.Show(student.FirstName);
-            }
+
+            dgvDiary.DataSource = students;
         }
 
         public void SerializeToFile(List<Student> students)
@@ -63,7 +56,8 @@ namespace WindowsFormsApp1
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-
+            var addEditStudent = new AddEditStudent();
+            addEditStudent.ShowDialog();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
