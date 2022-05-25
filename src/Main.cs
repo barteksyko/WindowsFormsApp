@@ -74,6 +74,23 @@ namespace WindowsFormsApp1
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if(dgvDiary.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select student to delete");
+                return;
+            }
+
+            var selectedStudent = dgvDiary.SelectedRows[0];
+
+            var confirmDelete = MessageBox.Show($"Are you sure to delete {(selectedStudent.Cells[1].Value.ToString() + " " + selectedStudent.Cells[2].Value.ToString()).Trim()}", "Deleting student", MessageBoxButtons.OKCancel);
+
+            if(confirmDelete == DialogResult.OK)
+            {
+                var students = DeserializeFromFile();
+                students.RemoveAll(x => x.Id == Convert.ToInt32(selectedStudent.Cells[0].Value));
+                SerializeToFile(students);
+                dgvDiary.DataSource = students;
+            }
 
         }
 

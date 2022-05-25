@@ -15,10 +15,12 @@ namespace WindowsFormsApp1
     public partial class AddEditStudent : Form
     {
         private string _filePath = Path.Combine(Environment.CurrentDirectory, "student.txt");
+        private int _studentId;
 
         public AddEditStudent(int IdConstr = 0)
         {
             InitializeComponent();
+            _studentId = IdConstr;
             if(IdConstr != 0)
             {
                 var students = DeserializeFromFile();
@@ -35,6 +37,9 @@ namespace WindowsFormsApp1
                 tbMathematic.Text = student.Math;
                 tbTechnology.Text = student.Technology;
                 tbPhysics.Text = student.Physics;
+                tbPolishLang.Text = student.PolishLang;
+                tbForeignLang.Text = student.ForeignLang;
+                rtbComments.Text = student.Comments;
             }
             
         }
@@ -70,20 +75,27 @@ namespace WindowsFormsApp1
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             var students = DeserializeFromFile();
 
-            var studentWithHighestId = students.OrderByDescending(x => x.Id).FirstOrDefault();
+            if (_studentId != 0)
+            {
+                students.RemoveAll(x => x.Id == _studentId);
+            }
+            else
+            {
+                var studentWithHighestId = students.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            var studentId = studentWithHighestId == null ? 1 : studentWithHighestId.Id + 1;
+                _studentId = studentWithHighestId == null ? 1 : studentWithHighestId.Id + 1;
+            }
 
             var student = new Student()
             {
-                Id = studentId,
+                Id = _studentId,
                 FirstName = tbName.Text,
                 SecondName = tbSurname.Text,
                 Math = tbMathematic.Text,
