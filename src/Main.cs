@@ -50,8 +50,7 @@ namespace WindowsFormsApp1
                 var students = (List<Student>)serializer.Deserialize(streamReader);
                 streamReader.Close();
                 return students;
-            }
-            
+            }            
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

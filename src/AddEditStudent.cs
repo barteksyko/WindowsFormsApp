@@ -21,6 +21,7 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             _studentId = IdConstr;
+
             if(IdConstr != 0)
             {
                 var students = DeserializeFromFile();
