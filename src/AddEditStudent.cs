@@ -14,66 +14,49 @@ namespace WindowsFormsApp1
 {
     public partial class AddEditStudent : Form
     {
-        private string _filePath = Path.Combine(Environment.CurrentDirectory, "student.txt");
         private int _studentId;
+        private Student _student;
+
+        private FileHelper<List<Student>> _fileHelper = new FileHelper<List<Student>>(Program.FilePath);
 
         public AddEditStudent(int IdConstr = 0)
         {
             InitializeComponent();
             _studentId = IdConstr;
 
-            if(IdConstr != 0)
+            GetStudentDate();
+            tbName.Select();            
+        }
+
+        private void GetStudentDate()
+        {
+            if (_studentId != 0)
             {
                 Text = "Edytowanie danych ucznia";
 
-                var students = DeserializeFromFile();
-                var student = students.FirstOrDefault(x => x.Id == IdConstr);
+                var students = _fileHelper.DeserializeFromFile();
+                _student = students.FirstOrDefault(x => x.Id == _studentId);
 
-                if(student == null)
+                if (_student == null)
                 {
                     throw new Exception("student Id is null");
                 }
 
-                tbId.Text = student.Id.ToString();
-                tbName.Text = student.FirstName;
-                tbSurname.Text = student.SecondName;
-                tbMathematic.Text = student.Math;
-                tbTechnology.Text = student.Technology;
-                tbPhysics.Text = student.Physics;
-                tbPolishLang.Text = student.PolishLang;
-                tbForeignLang.Text = student.ForeignLang;
-                rtbComments.Text = student.Comments;
-            }
-            
-        }
-
-        public void SerializeToFile(List<Student> students)
-        {
-            var serializer = new XmlSerializer(typeof(List<Student>));
-            
-            using (var streamWriter = new StreamWriter(_filePath))
-            {
-                serializer.Serialize(streamWriter, students);
-                streamWriter.Close();
+                FillTextBoxes();
             }
         }
 
-        public List<Student> DeserializeFromFile()
+        private void FillTextBoxes()
         {
-            if (!File.Exists(_filePath))
-            {
-                return new List<Student>();
-            }
-
-            var serializer = new XmlSerializer(typeof(List<Student>));
-
-            using (var streamReader = new StreamReader(_filePath))
-            {
-                var students = (List<Student>)serializer.Deserialize(streamReader);
-                streamReader.Close();
-                return students;
-            }
-
+            tbId.Text = _student.Id.ToString();
+            tbName.Text = _student.FirstName;
+            tbSurname.Text = _student.SecondName;
+            tbMathematic.Text = _student.Math;
+            tbTechnology.Text = _student.Technology;
+            tbPhysics.Text = _student.Physics;
+            tbPolishLang.Text = _student.PolishLang;
+            tbForeignLang.Text = _student.ForeignLang;
+            rtbComments.Text = _student.Comments;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -83,7 +66,7 @@ namespace WindowsFormsApp1
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
-            var students = DeserializeFromFile();
+            var students = _fileHelper.DeserializeFromFile();
 
             if (_studentId != 0)
             {
@@ -91,11 +74,17 @@ namespace WindowsFormsApp1
             }
             else
             {
-                var studentWithHighestId = students.OrderByDescending(x => x.Id).FirstOrDefault();
-
-                _studentId = studentWithHighestId == null ? 1 : studentWithHighestId.Id + 1;
+                AssignIdtoNewStudent(students);
             }
 
+            AddNewUserToList(students);
+
+            _fileHelper.SerializeToFile(students);
+            Close();
+        }
+
+        private void AddNewUserToList(List<Student> students)
+        {
             var student = new Student()
             {
                 Id = _studentId,
@@ -106,13 +95,17 @@ namespace WindowsFormsApp1
                 Physics = tbPhysics.Text,
                 PolishLang = tbPolishLang.Text,
                 ForeignLang = tbForeignLang.Text,
-                Comments = rtbComments.Text                
+                Comments = rtbComments.Text
             };
 
             students.Add(student);
+        }
 
-            SerializeToFile(students);
-            Close();
+        private void AssignIdtoNewStudent(List<Student> students)
+        {
+            var studentWithHighestId = students.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            _studentId = studentWithHighestId == null ? 1 : studentWithHighestId.Id + 1;
         }
     }
 }
