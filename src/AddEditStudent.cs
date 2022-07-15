@@ -24,6 +24,8 @@ namespace WindowsFormsApp1
 
             if(IdConstr != 0)
             {
+                Text = "Edytowanie danych ucznia";
+
                 var students = DeserializeFromFile();
                 var student = students.FirstOrDefault(x => x.Id == IdConstr);
 
@@ -104,7 +106,7 @@ namespace WindowsFormsApp1
                 Physics = tbPhysics.Text,
                 PolishLang = tbPolishLang.Text,
                 ForeignLang = tbForeignLang.Text,
-                Comments = rtbComments.Text
+                Comments = rtbComments.Text                
             };
 
             students.Add(student);
