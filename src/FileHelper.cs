@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace WindowsFormsApp1
 {
-    public class FileHelper<T> where T : new()
+    public class FileHelper<T> where T: new()
     {
         private string _filePath;
 

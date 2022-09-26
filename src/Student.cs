@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WindowsFormsApp1
-{
+{    
     public class Student
     {
         public int Id { get; set; }
@@ -17,5 +17,5 @@ namespace WindowsFormsApp1
         public string Physics { get; set; }
         public string PolishLang { get; set; }
         public string ForeignLang { get; set; }
-    }
+    }    
 }

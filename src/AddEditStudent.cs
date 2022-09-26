@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -80,9 +81,10 @@ namespace WindowsFormsApp1
             AddNewUserToList(students);
 
             _fileHelper.SerializeToFile(students);
-            Close();
-        }
 
+            Close(); 
+        }
+        
         private void AddNewUserToList(List<Student> students)
         {
             var student = new Student()
