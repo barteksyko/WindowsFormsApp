@@ -73,7 +73,7 @@ namespace WindowsFormsApp1
             Close();
         }
 
-        private void btnConfirm_Click(object sender, EventArgs e)
+        private async void btnConfirm_Click(object sender, EventArgs e)
         {
             var students = _fileHelper.DeserializeFromFile();
 
@@ -92,9 +92,20 @@ namespace WindowsFormsApp1
 
             OnStudentAdded();
 
+            await LongProcessAsync();
+
             Close(); 
         }
-        
+
+        private async Task LongProcessAsync()
+        {
+            await Task.Run(() =>
+            {
+                Thread.Sleep(3000);
+            });
+
+        }
+
         private void AddNewUserToList(List<Student> students)
         {
             var student = new Student()
