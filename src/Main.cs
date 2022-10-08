@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using WindowsFormsApp1.Properties;
 
 namespace WindowsFormsApp1
 {
@@ -10,11 +11,28 @@ namespace WindowsFormsApp1
     {
         private FileHelper<List<Student>> _fileHelper = new FileHelper<List<Student>>(Program.FilePath);
 
+        public bool IsMaximize
+        {
+            get
+            {
+                return Settings.Default.IsMaximize;
+            }
+            set
+            {
+                Settings.Default.IsMaximize = value;
+            }
+        }
+
         public Main()
         {
             InitializeComponent();
             RefreshDiary();
             SetColumnsHeader();
+
+            if (IsMaximize == true)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
         }
 
         private void RefreshDiary()
@@ -26,15 +44,16 @@ namespace WindowsFormsApp1
 
         private void SetColumnsHeader()
         {
-            dgvDiary.Columns[0].HeaderText = "Numer";
-            dgvDiary.Columns[1].HeaderText = "Imię";
-            dgvDiary.Columns[2].HeaderText = "Nazwisko";
-            dgvDiary.Columns[3].HeaderText = "Uwagi";
-            dgvDiary.Columns[4].HeaderText = "Matematyka";
-            dgvDiary.Columns[5].HeaderText = "Technologia";
-            dgvDiary.Columns[6].HeaderText = "Fizyka";
-            dgvDiary.Columns[7].HeaderText = "Język polski";
-            dgvDiary.Columns[8].HeaderText = "Jęzsyk obcy";
+            dgvDiary.Columns[nameof(Student.Id)].HeaderText = "Numer";
+            dgvDiary.Columns[nameof(Student.FirstName)].HeaderText = "Imię";
+            dgvDiary.Columns[nameof(Student.SecondName)].HeaderText = "Nazwisko";
+            dgvDiary.Columns[nameof(Student.Comments)].HeaderText = "Uwagi";
+            dgvDiary.Columns[nameof(Student.Math)].HeaderText = "Matematyka";
+            dgvDiary.Columns[nameof(Student.Technology)].HeaderText = "Technologia";
+            dgvDiary.Columns[nameof(Student.Physics)].HeaderText = "Fizyka";
+            dgvDiary.Columns[nameof(Student.PolishLang)].HeaderText = "Język polski";
+            dgvDiary.Columns[nameof(Student.ForeignLang)].HeaderText = "Jęzsyk obcy";
+            dgvDiary.Columns[nameof(Student.AdditionalClasses)].HeaderText = "Zajęcia dodatkowe";
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -93,6 +112,20 @@ namespace WindowsFormsApp1
             var students = _fileHelper.DeserializeFromFile();
             students.RemoveAll(x => x.Id == id);
             _fileHelper.SerializeToFile(students);
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                IsMaximize = true;
+            }
+            else
+            {
+                IsMaximize = false;
+            }
+
+            Settings.Default.Save();
         }
     }
 }

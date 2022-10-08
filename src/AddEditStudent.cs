@@ -17,6 +17,7 @@ namespace WindowsFormsApp1
     {
         private int _studentId;
         private Student _student;
+        private List<Group> _groups;
 
         public delegate void MySimpleDelegate();
         public event MySimpleDelegate StudentAdded;
@@ -27,9 +28,23 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             _studentId = IdConstr;
+            _groups = new List<Group>
+            {
+                new Group{Id = 0, Name = "brak"},
+                new Group{Id = 1, Name = "1a"},
+                new Group{Id = 2, Name = "2a"},
+            };
+            InitGroupCombobox();
 
             GetStudentDate();
-            tbName.Select();            
+            tbName.Select();
+        }
+
+        private void InitGroupCombobox()
+        {
+            cmbGroup.DataSource = _groups;
+            cmbGroup.DisplayMember = "Name";
+            cmbGroup.ValueMember = "Id";
         }
 
         private void OnStudentAdded()
@@ -66,6 +81,8 @@ namespace WindowsFormsApp1
             tbPolishLang.Text = _student.PolishLang;
             tbForeignLang.Text = _student.ForeignLang;
             rtbComments.Text = _student.Comments;
+            cbAdditionalClasses.Checked = _student.AdditionalClasses;
+            cmbGroup.SelectedItem = _groups.FirstOrDefault(x => x.Id == _student.GroupId);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -94,7 +111,7 @@ namespace WindowsFormsApp1
 
             await LongProcessAsync();
 
-            Close(); 
+            Close();
         }
 
         private async Task LongProcessAsync()
@@ -118,7 +135,9 @@ namespace WindowsFormsApp1
                 Physics = tbPhysics.Text,
                 PolishLang = tbPolishLang.Text,
                 ForeignLang = tbForeignLang.Text,
-                Comments = rtbComments.Text
+                Comments = rtbComments.Text,
+                AdditionalClasses = cbAdditionalClasses.Checked,
+                GroupId = (cmbGroup.SelectedItem as Group).Id
             };
 
             students.Add(student);
