@@ -40,8 +40,14 @@ namespace WindowsFormsApp1
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var addEditStudent = new AddEditStudent();
-            //addEditStudent.FormClosing += AddEditStudent_FormClosing;
+            addEditStudent.StudentAdded += AddEditStudent_StudentAdded;
             addEditStudent.ShowDialog();
+            addEditStudent.StudentAdded -= AddEditStudent_StudentAdded;
+        }
+
+        private void AddEditStudent_StudentAdded()
+        {
+            RefreshDiary();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -53,8 +59,14 @@ namespace WindowsFormsApp1
             }
 
             var addEditStudent = new AddEditStudent(Convert.ToInt32(dgvDiary.SelectedRows[0].Cells[0].Value));
-            //addEditStudent.FormClosing += AddEditStudent_FormClosing;
+            addEditStudent.StudentAdded += AddEditStudent_StudentAdded2;
             addEditStudent.ShowDialog();
+            addEditStudent.StudentAdded -= AddEditStudent_StudentAdded2;
+        }
+
+        private void AddEditStudent_StudentAdded2()
+        {
+            RefreshDiary();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -81,11 +93,6 @@ namespace WindowsFormsApp1
             var students = _fileHelper.DeserializeFromFile();
             students.RemoveAll(x => x.Id == id);
             _fileHelper.SerializeToFile(students);
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            RefreshDiary();
         }
     }
 }

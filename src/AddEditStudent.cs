@@ -18,6 +18,9 @@ namespace WindowsFormsApp1
         private int _studentId;
         private Student _student;
 
+        public delegate void MySimpleDelegate();
+        public event MySimpleDelegate StudentAdded;
+
         private FileHelper<List<Student>> _fileHelper = new FileHelper<List<Student>>(Program.FilePath);
 
         public AddEditStudent(int IdConstr = 0)
@@ -27,6 +30,11 @@ namespace WindowsFormsApp1
 
             GetStudentDate();
             tbName.Select();            
+        }
+
+        private void OnStudentAdded()
+        {
+            StudentAdded?.Invoke();
         }
 
         private void GetStudentDate()
@@ -81,6 +89,8 @@ namespace WindowsFormsApp1
             AddNewUserToList(students);
 
             _fileHelper.SerializeToFile(students);
+
+            OnStudentAdded();
 
             Close(); 
         }
